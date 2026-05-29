@@ -4,7 +4,12 @@ import io
 import datetime
 import os
 
-app = Flask(__name__)
+_root = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    static_folder=os.path.join(_root, "static"),
+    template_folder=os.path.join(_root, "templates"),
+)
 
 GREEN = (44, 74, 46)
 LIGHT_GREEN = (244, 247, 244)

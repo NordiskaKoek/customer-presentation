@@ -8,7 +8,30 @@
 </head>
 <body>
   <header>
-    <img src="{{ url_for('static', filename='logo.svg') }}" alt="Nordiska Köket" class="logo"/>
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200" width="56" height="56">
+        <circle cx="100" cy="100" r="93" fill="none" stroke="white" stroke-width="4.5"/>
+        <defs>
+          <path id="topArcH" d="M 16,100 A 84,84 0 0,1 184,100"/>
+          <path id="bottomArcH" d="M 34,118 A 70,70 0 0,0 166,118"/>
+        </defs>
+        <text font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="5.5" fill="white">
+          <textPath xlink:href="#topArcH" startOffset="50%" text-anchor="middle">NORDISKA</textPath>
+        </text>
+        <text font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="9" fill="white">
+          <textPath xlink:href="#bottomArcH" startOffset="50%" text-anchor="middle">KÖK</textPath>
+        </text>
+        <rect x="50" y="50" width="100" height="100" fill="none" stroke="white" stroke-width="3"/>
+        <rect x="61" y="61" width="78" height="78" fill="none" stroke="white" stroke-width="1.5"/>
+        <line x1="87" y1="61" x2="87" y2="139" stroke="white" stroke-width="1.5"/>
+        <line x1="113" y1="61" x2="113" y2="139" stroke="white" stroke-width="1.5"/>
+        <line x1="61" y1="87" x2="139" y2="87" stroke="white" stroke-width="1.5"/>
+        <line x1="61" y1="113" x2="139" y2="113" stroke="white" stroke-width="1.5"/>
+        <line x1="70" y1="67" x2="70" y2="133" stroke="white" stroke-width="6" stroke-linecap="square"/>
+        <line x1="70" y1="67" x2="130" y2="133" stroke="white" stroke-width="6" stroke-linecap="square"/>
+        <line x1="130" y1="67" x2="130" y2="133" stroke="white" stroke-width="6" stroke-linecap="square"/>
+      </svg>
+    </div>
     <h1>Quote &amp; Order Confirmation Generator</h1>
   </header>
 

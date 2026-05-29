@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+
+  <!-- Top arc text: NORDISKA -->
+  <defs>
+    <path id="topArc" d="M 20,100 A 80,80 0 0,1 180,100"/>
+  </defs>
+  <text font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="6" fill="#1a1a1a">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">NORDISKA</textPath>
+  </text>
+
+  <!-- Bottom arc text: KÖK -->
+  <defs>
+    <path id="bottomArc" d="M 30,108 A 72,72 0 0,0 170,108"/>
+  </defs>
+  <text font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="8" fill="#1a1a1a">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">KÖK</textPath>
+  </text>
+
+  <!-- Outer rectangle frame -->
+  <rect x="52" y="52" width="96" height="96" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <!-- Inner rectangle frame -->
+  <rect x="60" y="60" width="80" height="80" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- Grid lines inside inner rectangle (3x3 grid) -->
+  <!-- Vertical lines -->
+  <line x1="87" y1="60" x2="87" y2="140" stroke="#1a1a1a" stroke-width="1.5"/>
+  <line x1="113" y1="60" x2="113" y2="140" stroke="#1a1a1a" stroke-width="1.5"/>
+  <!-- Horizontal lines -->
+  <line x1="60" y1="87" x2="140" y2="87" stroke="#1a1a1a" stroke-width="1.5"/>
+  <line x1="60" y1="113" x2="140" y2="113" stroke="#1a1a1a" stroke-width="1.5"/>
+
+  <!-- Stylized N — diagonal strokes -->
+  <!-- Left vertical bar of N -->
+  <line x1="72" y1="68" x2="72" y2="132" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+  <!-- Diagonal of N -->
+  <line x1="72" y1="68" x2="128" y2="132" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+  <!-- Right vertical bar of N -->
+  <line x1="128" y1="68" x2="128" y2="132" stroke="#1a1a1a" stroke-width="5" stroke-linecap="round"/>
+</svg>

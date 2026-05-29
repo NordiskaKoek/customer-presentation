@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_file
-from weasyprint import HTML
+from xhtml2pdf import pisa
 import io
 import datetime
 
@@ -21,10 +21,12 @@ def preview():
 def generate():
     data = build_data(request.form)
     html_content = render_template("pdf_template.html", **data)
-    pdf = HTML(string=html_content, base_url=request.host_url).write_pdf()
+    pdf_buffer = io.BytesIO()
+    pisa.CreatePDF(io.StringIO(html_content), dest=pdf_buffer)
+    pdf_buffer.seek(0)
     filename = f"quote_{data['doc_number']}.pdf"
     return send_file(
-        io.BytesIO(pdf),
+        pdf_buffer,
         mimetype="application/pdf",
         as_attachment=True,
         download_name=filename,

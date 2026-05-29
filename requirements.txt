@@ -1,2 +1,2 @@
 flask>=3.0
-xhtml2pdf>=0.2.16
+fpdf2>=2.8

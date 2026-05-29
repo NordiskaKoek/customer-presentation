@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 from fpdf import FPDF
 import io
 import datetime
 import os
+import requests
 
 _root = os.path.dirname(os.path.abspath(__file__))
 app = Flask(
@@ -243,9 +244,100 @@ def generate_pdf(data):
     return pdf.output()
 
 
+def fetch_pipedrive_deal(deal_id):
+    """Fetch deal, person, org and products from Pipedrive and return prefill dict."""
+    token = os.environ.get("PIPEDRIVE_API_TOKEN")
+    if not token:
+        return None, "PIPEDRIVE_API_TOKEN not configured"
+
+    base = "https://api.pipedrive.com/v1"
+    params = {"api_token": token}
+
+    # 1. Fetch deal
+    r = requests.get(f"{base}/deals/{deal_id}", params=params, timeout=10)
+    if not r.ok:
+        return None, f"Deal {deal_id} not found (HTTP {r.status_code})"
+    deal = r.json().get("data", {})
+    if not deal:
+        return None, f"Deal {deal_id} returned no data"
+
+    # 2. Fetch person
+    person = {}
+    person_id = deal.get("person_id", {})
+    if isinstance(person_id, dict):
+        person_id = person_id.get("value")
+    if person_id:
+        rp = requests.get(f"{base}/persons/{person_id}", params=params, timeout=10)
+        if rp.ok:
+            person = rp.json().get("data", {})
+
+    # 3. Fetch organization
+    org = {}
+    org_id = deal.get("org_id", {})
+    if isinstance(org_id, dict):
+        org_id = org_id.get("value")
+    if org_id:
+        ro = requests.get(f"{base}/organizations/{org_id}", params=params, timeout=10)
+        if ro.ok:
+            org = ro.json().get("data", {})
+
+    # 4. Fetch deal products
+    rpr = requests.get(f"{base}/deals/{deal_id}/products", params=params, timeout=10)
+    products = rpr.json().get("data") or [] if rpr.ok else []
+
+    # Build prefill
+    name = person.get("name") or org.get("name") or deal.get("title", "")
+    emails = person.get("email", [])
+    email = emails[0].get("value", "") if emails else ""
+    phones = person.get("phone", [])
+    phone = phones[0].get("value", "") if phones else ""
+
+    # Address from org or person
+    address = org.get("address") or person.get("primary_email", "")
+    address_parts = []
+    if org.get("address_street_number") and org.get("address_route"):
+        address_parts.append(f"{org['address_route']} {org['address_street_number']}")
+    elif org.get("address"):
+        address_parts.append(org["address"])
+    city = ""
+    if org.get("address_postal_code") and org.get("address_locality"):
+        city = f"{org['address_postal_code']} {org['address_locality']}"
+
+    # Products → items
+    items = []
+    for p in products:
+        items.append({
+            "name": p.get("name", ""),
+            "desc": p.get("comments", ""),
+            "qty": float(p.get("quantity") or 1),
+            "price": float(p.get("item_price") or 0),
+            "total": float(p.get("sum") or 0),
+        })
+
+    prefill = {
+        "deal_id": deal_id,
+        "project_name": deal.get("title", ""),
+        "customer_name": name,
+        "customer_email": email,
+        "customer_phone": phone,
+        "customer_address": address_parts[0] if address_parts else "",
+        "customer_city": city,
+        "prefill_items": items,
+        "doc_number": str(deal_id),
+    }
+    return prefill, None
+
+
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html")
+    deal_id = request.args.get("deal_id")
+    prefill = {}
+    error = None
+    if deal_id:
+        prefill, error = fetch_pipedrive_deal(deal_id)
+        if prefill is None:
+            prefill = {}
+    return render_template("index.html", prefill=prefill, pipedrive_error=error)
 
 
 @app.route("/preview", methods=["POST"])

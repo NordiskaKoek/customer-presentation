@@ -38,6 +38,13 @@
     <h1>Quote &amp; Order Confirmation Generator</h1>
   </header>
 
+  {% if pipedrive_error %}
+  <div class="alert-error">⚠️ Pipedrive: {{ pipedrive_error }}</div>
+  {% endif %}
+  {% if prefill and prefill.project_name %}
+  <div class="alert-success">✓ Loaded from Pipedrive — <strong>{{ prefill.project_name }}</strong></div>
+  {% endif %}
+
   <form id="quoteForm" method="POST">
     <!-- Document settings -->
     <section class="card">
@@ -52,45 +59,45 @@
         </label>
         <label>
           Document Number
-          <input type="text" name="doc_number" value="001" required/>
+          <input type="text" name="doc_number" value="{{ prefill.doc_number if prefill else '001' }}" required/>
         </label>
       </div>
     </section>
 
     <!-- Customer details -->
     <section class="card">
-      <h2>Customer Details</h2>
+      <h2>Customer Details {% if prefill and prefill.customer_name %}<span class="from-pipedrive">from Pipedrive</span>{% endif %}</h2>
       <div class="grid-2">
         <label>
           Full Name
-          <input type="text" name="customer_name" placeholder="Anna Lindström" required/>
+          <input type="text" name="customer_name" value="{{ prefill.customer_name if prefill else '' }}" placeholder="Anna Lindström" required/>
         </label>
         <label>
           Email
-          <input type="email" name="customer_email" placeholder="anna@example.com"/>
+          <input type="email" name="customer_email" value="{{ prefill.customer_email if prefill else '' }}" placeholder="anna@example.com"/>
         </label>
         <label>
           Phone
-          <input type="tel" name="customer_phone" placeholder="+46 70 000 00 00"/>
+          <input type="tel" name="customer_phone" value="{{ prefill.customer_phone if prefill else '' }}" placeholder="+46 70 000 00 00"/>
         </label>
         <label>
           Project Name
-          <input type="text" name="project_name" placeholder="Kitchen renovation — Stockholm"/>
+          <input type="text" name="project_name" value="{{ prefill.project_name if prefill else '' }}" placeholder="Kitchen renovation — Stockholm"/>
         </label>
         <label class="full">
           Address
-          <input type="text" name="customer_address" placeholder="Storgatan 1"/>
+          <input type="text" name="customer_address" value="{{ prefill.customer_address if prefill else '' }}" placeholder="Storgatan 1"/>
         </label>
         <label class="full">
           City &amp; Postal Code
-          <input type="text" name="customer_city" placeholder="112 35 Stockholm"/>
+          <input type="text" name="customer_city" value="{{ prefill.customer_city if prefill else '' }}" placeholder="112 35 Stockholm"/>
         </label>
       </div>
     </section>
 
     <!-- Products -->
     <section class="card">
-      <h2>Products</h2>
+      <h2>Products {% if prefill and prefill.prefill_items %}<span class="from-pipedrive">{{ prefill.prefill_items|length }} from Pipedrive</span>{% endif %}</h2>
       <table id="itemsTable">
         <thead>
           <tr>
@@ -103,6 +110,18 @@
           </tr>
         </thead>
         <tbody id="itemRows">
+          {% if prefill and prefill.prefill_items %}
+            {% for item in prefill.prefill_items %}
+          <tr class="item-row">
+            <td><input type="text" name="item_name[]" value="{{ item.name }}"/></td>
+            <td><input type="text" name="item_desc[]" value="{{ item.desc }}"/></td>
+            <td><input type="number" name="item_qty[]" value="{{ item.qty }}" min="0" step="0.01" class="qty-input"/></td>
+            <td><input type="number" name="item_price[]" value="{{ item.price }}" min="0" step="0.01" class="price-input"/></td>
+            <td class="row-total">{{ "%.2f"|format(item.total) }}</td>
+            <td><button type="button" class="btn-remove" onclick="removeRow(this)">✕</button></td>
+          </tr>
+            {% endfor %}
+          {% else %}
           <tr class="item-row">
             <td><input type="text" name="item_name[]" placeholder="Kitchen cabinet set"/></td>
             <td><input type="text" name="item_desc[]" placeholder="White matte finish"/></td>
@@ -111,6 +130,7 @@
             <td class="row-total">0.00</td>
             <td><button type="button" class="btn-remove" onclick="removeRow(this)">✕</button></td>
           </tr>
+          {% endif %}
         </tbody>
       </table>
       <button type="button" class="btn-secondary" onclick="addRow()">+ Add Item</button>

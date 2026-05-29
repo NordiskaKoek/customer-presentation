@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nordiska Köket — Quote Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+  <header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Nordiska Köket" class="logo" onerror="this.style.display='none'"/>
+    <h1>Quote &amp; Order Confirmation Generator</h1>
+  </header>
+
+  <form id="quoteForm" method="POST">
+    <!-- Document settings -->
+    <section class="card">
+      <h2>Document Settings</h2>
+      <div class="grid-2">
+        <label>
+          Document Type
+          <select name="doc_type">
+            <option value="Quote">Quote</option>
+            <option value="Order Confirmation">Order Confirmation</option>
+          </select>
+        </label>
+        <label>
+          Document Number
+          <input type="text" name="doc_number" value="001" required/>
+        </label>
+      </div>
+    </section>
+
+    <!-- Customer details -->
+    <section class="card">
+      <h2>Customer Details</h2>
+      <div class="grid-2">
+        <label>
+          Full Name
+          <input type="text" name="customer_name" placeholder="Anna Lindström" required/>
+        </label>
+        <label>
+          Email
+          <input type="email" name="customer_email" placeholder="anna@example.com"/>
+        </label>
+        <label>
+          Phone
+          <input type="tel" name="customer_phone" placeholder="+46 70 000 00 00"/>
+        </label>
+        <label>
+          Project Name
+          <input type="text" name="project_name" placeholder="Kitchen renovation — Stockholm"/>
+        </label>
+        <label class="full">
+          Address
+          <input type="text" name="customer_address" placeholder="Storgatan 1"/>
+        </label>
+        <label class="full">
+          City &amp; Postal Code
+          <input type="text" name="customer_city" placeholder="112 35 Stockholm"/>
+        </label>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="card">
+      <h2>Products</h2>
+      <table id="itemsTable">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit Price (SEK)</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="itemRows">
+          <tr class="item-row">
+            <td><input type="text" name="item_name[]" placeholder="Kitchen cabinet set"/></td>
+            <td><input type="text" name="item_desc[]" placeholder="White matte finish"/></td>
+            <td><input type="number" name="item_qty[]" value="1" min="0" step="0.01" class="qty-input"/></td>
+            <td><input type="number" name="item_price[]" value="0" min="0" step="0.01" class="price-input"/></td>
+            <td class="row-total">0.00</td>
+            <td><button type="button" class="btn-remove" onclick="removeRow(this)">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="btn-secondary" onclick="addRow()">+ Add Item</button>
+
+      <div class="totals">
+        <div class="totals-row"><span>Subtotal</span><span id="subtotal">0.00</span></div>
+        <div class="totals-row"><span>VAT 25%</span><span id="vat">0.00</span></div>
+        <div class="totals-row grand"><span>Total</span><span id="grand">0.00</span></div>
+      </div>
+    </section>
+
+    <!-- Notes & Signature -->
+    <section class="card">
+      <h2>Notes &amp; Signature</h2>
+      <label>
+        Notes / Terms
+        <textarea name="notes" rows="4" placeholder="Payment terms: 30 days net. Installation not included."></textarea>
+      </label>
+    </section>
+
+    <div class="actions">
+      <button type="submit" formaction="/preview" class="btn-secondary" target="_blank">Preview</button>
+      <button type="submit" formaction="/generate" class="btn-primary">Download PDF</button>
+    </div>
+  </form>
+
+  <script>
+    function addRow() {
+      const tbody = document.getElementById('itemRows');
+      const row = document.querySelector('.item-row').cloneNode(true);
+      row.querySelectorAll('input').forEach(i => {
+        if (i.name.includes('qty') || i.name.includes('price')) i.value = i.name.includes('qty') ? 1 : 0;
+        else i.value = '';
+      });
+      row.querySelector('.row-total').textContent = '0.00';
+      tbody.appendChild(row);
+      attachListeners(row);
+    }
+
+    function removeRow(btn) {
+      const rows = document.querySelectorAll('.item-row');
+      if (rows.length > 1) btn.closest('.item-row').remove();
+      updateTotals();
+    }
+
+    function attachListeners(row) {
+      row.querySelectorAll('.qty-input, .price-input').forEach(input => {
+        input.addEventListener('input', () => updateRow(row));
+      });
+    }
+
+    function updateRow(row) {
+      const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+      const price = parseFloat(row.querySelector('.price-input').value) || 0;
+      row.querySelector('.row-total').textContent = (qty * price).toFixed(2);
+      updateTotals();
+    }
+
+    function updateTotals() {
+      let subtotal = 0;
+      document.querySelectorAll('.item-row').forEach(row => {
+        const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+        const price = parseFloat(row.querySelector('.price-input').value) || 0;
+        subtotal += qty * price;
+      });
+      const vat = subtotal * 0.25;
+      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+      document.getElementById('vat').textContent = vat.toFixed(2);
+      document.getElementById('grand').textContent = (subtotal + vat).toFixed(2);
+    }
+
+    // Init listeners
+    document.querySelectorAll('.item-row').forEach(attachListeners);
+  </script>
+</body>
+</html>

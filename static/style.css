@@ -1,0 +1,229 @@
+/* Reset & base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #f2f4f2;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+header {
+  background: #2c4a2e;
+  color: white;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+header .logo {
+  height: 48px;
+  filter: brightness(0) invert(1);
+}
+
+header h1 {
+  font-size: 18pt;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+form {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  font-size: 13pt;
+  color: #2c4a2e;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e8ede8;
+}
+
+/* Grid layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 9pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #666;
+  gap: 6px;
+}
+
+label.full {
+  grid-column: 1 / -1;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  font-size: 11pt;
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+  color: #1a1a1a;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #2c4a2e;
+  background: white;
+}
+
+textarea { resize: vertical; }
+
+/* Items table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+thead tr {
+  background: #2c4a2e;
+  color: white;
+}
+
+thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+  background: #f7faf7;
+}
+
+tbody td {
+  padding: 8px 6px;
+}
+
+tbody td input {
+  width: 100%;
+  padding: 7px 8px;
+  font-size: 10pt;
+}
+
+.row-total {
+  text-align: right;
+  font-weight: 600;
+  color: #2c4a2e;
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #cc4444;
+  font-size: 14pt;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.btn-remove:hover { background: #fff0f0; }
+
+/* Totals */
+.totals {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.totals-row {
+  display: flex;
+  gap: 60px;
+  font-size: 11pt;
+  justify-content: flex-end;
+}
+
+.totals-row span:last-child {
+  min-width: 120px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.totals-row.grand {
+  font-size: 14pt;
+  font-weight: 700;
+  color: #2c4a2e;
+  border-top: 2px solid #2c4a2e;
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+/* Buttons */
+.btn-secondary {
+  background: white;
+  border: 2px solid #2c4a2e;
+  color: #2c4a2e;
+  padding: 10px 22px;
+  font-size: 10pt;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: #f4f7f4; }
+
+.btn-primary {
+  background: #2c4a2e;
+  border: 2px solid #2c4a2e;
+  color: white;
+  padding: 10px 28px;
+  font-size: 10pt;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: #1e3620; border-color: #1e3620; }
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Add item button */
+button.btn-secondary[onclick="addRow()"] {
+  margin-top: 4px;
+  font-size: 10pt;
+  padding: 8px 18px;
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11pt;
+      color: #1a1a1a;
+      padding: 40px 50px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid #2c4a2e;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .header-logo img {
+      height: 60px;
+    }
+    .header-logo .brand-name {
+      font-size: 22pt;
+      font-weight: 700;
+      color: #2c4a2e;
+      letter-spacing: 1px;
+    }
+    .header-logo .brand-tagline {
+      font-size: 8pt;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .header-meta {
+      text-align: right;
+    }
+    .doc-type {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #2c4a2e;
+      text-transform: uppercase;
+    }
+    .header-meta p {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    /* Info section */
+    .info-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      gap: 30px;
+    }
+    .info-box {
+      flex: 1;
+    }
+    .info-box h3 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+    .info-box p {
+      font-size: 10pt;
+      line-height: 1.7;
+      color: #333;
+    }
+
+    /* Project badge */
+    .project-badge {
+      background: #f4f7f4;
+      border-left: 4px solid #2c4a2e;
+      padding: 10px 16px;
+      margin-bottom: 24px;
+      font-size: 10pt;
+      color: #333;
+    }
+    .project-badge strong { color: #2c4a2e; }
+
+    /* Items table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    thead tr {
+      background: #2c4a2e;
+      color: white;
+    }
+    thead th {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 9pt;
+      letter-spacing: 0.5px;
+    }
+    thead th.right { text-align: right; }
+    tbody tr {
+      border-bottom: 1px solid #eee;
+    }
+    tbody tr:nth-child(even) {
+      background: #f9faf9;
+    }
+    tbody td {
+      padding: 9px 12px;
+      font-size: 10pt;
+    }
+    tbody td.right { text-align: right; }
+    .item-desc { font-size: 9pt; color: #777; margin-top: 2px; }
+
+    /* Totals */
+    .totals-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 30px;
+    }
+    .totals-table {
+      width: 280px;
+    }
+    .totals-table td {
+      padding: 6px 12px;
+      font-size: 10pt;
+    }
+    .totals-table td:last-child { text-align: right; }
+    .totals-table tr.grand td {
+      font-weight: 700;
+      font-size: 12pt;
+      color: #2c4a2e;
+      border-top: 2px solid #2c4a2e;
+      padding-top: 8px;
+    }
+
+    /* Notes */
+    .notes {
+      background: #f9faf9;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-bottom: 30px;
+    }
+    .notes h3 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .notes p {
+      font-size: 9.5pt;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    /* Signature */
+    .signature-section {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .sig-box {
+      flex: 1;
+    }
+    .sig-box h3 {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      margin-bottom: 40px;
+    }
+    .sig-line {
+      border-top: 1px solid #aaa;
+      padding-top: 6px;
+      font-size: 9pt;
+      color: #777;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+      text-align: center;
+      font-size: 8pt;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">
+      <div class="brand-name">Nordiska Köket</div>
+      <div class="brand-tagline">Scandinavian Kitchen Design</div>
+    </div>
+    <div class="header-meta">
+      <div class="doc-type">{{ doc_type }}</div>
+      <p><strong>#</strong> {{ doc_number }}</p>
+      <p><strong>Date:</strong> {{ date }}</p>
+      {% if doc_type == "Quote" %}
+      <p><strong>Valid until:</strong> {{ valid_until }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Info grid -->
+  <div class="info-grid">
+    <div class="info-box">
+      <h3>From</h3>
+      <p>
+        <strong>Nordiska Köket AB</strong><br/>
+        Kungsgatan 12<br/>
+        111 43 Stockholm<br/>
+        info@nordiskakoket.se<br/>
+        +46 8 000 00 00
+      </p>
+    </div>
+    <div class="info-box">
+      <h3>To</h3>
+      <p>
+        <strong>{{ customer_name }}</strong><br/>
+        {% if customer_address %}{{ customer_address }}<br/>{% endif %}
+        {% if customer_city %}{{ customer_city }}<br/>{% endif %}
+        {% if customer_email %}{{ customer_email }}<br/>{% endif %}
+        {% if customer_phone %}{{ customer_phone }}{% endif %}
+      </p>
+    </div>
+  </div>
+
+  {% if project_name %}
+  <div class="project-badge">
+    <strong>Project:</strong> {{ project_name }}
+  </div>
+  {% endif %}
+
+  <!-- Items table -->
+  <table>
+    <thead>
+      <tr>
+        <th style="width:30%">Item</th>
+        <th style="width:30%">Description</th>
+        <th class="right" style="width:10%">Qty</th>
+        <th class="right" style="width:15%">Unit Price</th>
+        <th class="right" style="width:15%">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.desc }}</td>
+        <td class="right">{{ "%.2f"|format(item.qty) }}</td>
+        <td class="right">{{ "%.2f"|format(item.price) }} SEK</td>
+        <td class="right">{{ "%.2f"|format(item.total) }} SEK</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <div class="totals-wrapper">
+    <table class="totals-table">
+      <tr>
+        <td>Subtotal</td>
+        <td>{{ "%.2f"|format(subtotal) }} SEK</td>
+      </tr>
+      <tr>
+        <td>VAT (25%)</td>
+        <td>{{ "%.2f"|format(vat) }} SEK</td>
+      </tr>
+      <tr class="grand">
+        <td>Total</td>
+        <td>{{ "%.2f"|format(grand_total) }} SEK</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Notes -->
+  {% if notes %}
+  <div class="notes">
+    <h3>Notes &amp; Terms</h3>
+    <p>{{ notes }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Signature -->
+  <div class="signature-section">
+    <div class="sig-box">
+      <h3>Approved by (Nordiska Köket)</h3>
+      <div class="sig-line">Signature &amp; Date</div>
+    </div>
+    <div class="sig-box">
+      <h3>Approved by (Customer)</h3>
+      <div class="sig-line">Signature &amp; Date</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Nordiska Köket AB · Org. nr: 556XXX-XXXX · VAT: SE556XXXXXXXXX01 · www.nordiskakoket.se
+  </div>
+
+</body>
+</html>
